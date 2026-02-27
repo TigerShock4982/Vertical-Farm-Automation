@@ -9,8 +9,21 @@ import json
 import urllib.request
 import urllib.error
 
-from Mock_Sensor_Generation import MockSensorGenerator
 import MSG
+
+# ========== CONFIGURATION ==========
+# Choose which mock sensor generator to use:
+# "opt" for optimal sensors (normal ranges), or "flagged" for anomaly scenarios
+SENSOR_MODE = "flagged"
+# ====================================
+
+# Dynamically import the appropriate generator
+if SENSOR_MODE == "opt":
+    from Opt_MSG import MockSensorGenerator
+elif SENSOR_MODE == "flagged":
+    from Flagged_MSG import FlaggedSensorGenerator as MockSensorGenerator
+else:
+    raise ValueError(f"Invalid SENSOR_MODE: {SENSOR_MODE}. Use 'opt' or 'flagged'.")
 
 
 def post_json(url: str, payload: dict, timeout_s: float = 3.0) -> tuple[int, str]:
